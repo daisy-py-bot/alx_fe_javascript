@@ -167,8 +167,13 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
     }
   }
   
+  // Function to sync quotes periodically
+  function syncQuotes() {
+    fetchQuotesFromServer();
+  }
+  
   // Periodically fetch quotes from the server
-  setInterval(fetchQuotesFromServer, 60000); // Fetch every 60 seconds
+  setInterval(syncQuotes, 60000); // Fetch every 60 seconds
   
   // Event listener for the Show New Quote button
   document.getElementById('newQuote').addEventListener('click', showRandomQuote);
