@@ -5,6 +5,8 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
     { text: "You learn more from failure than from success.", category: "Learning" },
   ];
   
+  const serverUrl = 'https://jsonplaceholder.typicode.com/posts';
+  
   // Function to show a random quote
   function showRandomQuote() {
     const filteredQuotes = getFilteredQuotes();
@@ -21,12 +23,14 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
     const newQuoteCategory = document.getElementById('newQuoteCategory').value;
     
     if (newQuoteText && newQuoteCategory) {
-      quotes.push({ text: newQuoteText, category: newQuoteCategory });
+      const newQuote = { text: newQuoteText, category: newQuoteCategory };
+      quotes.push(newQuote);
       saveQuotes();
       alert('Quote added successfully!');
       document.getElementById('newQuoteText').value = '';
       document.getElementById('newQuoteCategory').value = '';
       populateCategories();
+      syncQuoteToServer(newQuote);
     } else {
       alert('Please enter both a quote and a category.');
     }
@@ -123,6 +127,48 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
       quoteDisplay.textContent = `${lastQuote.text} - ${lastQuote.category}`;
     }
   }
+  
+  // Function to sync quote to server
+  async function syncQuoteToServer(quote) {
+    try {
+      const response = await fetch(serverUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(quote),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to sync quote to server');
+      }
+    } catch (error) {
+      console.error('Error syncing quote:', error);
+    }
+  }
+  
+  // Function to fetch quotes from server
+  async function fetchQuotesFromServer() {
+    try {
+      const response = await fetch(serverUrl);
+      if (!response.ok) {
+        throw new Error('Failed to fetch quotes from server');
+      }
+      const serverQuotes = await response.json();
+      const newQuotes = serverQuotes.filter(serverQuote => !quotes.some(localQuote => localQuote.text === serverQuote.text));
+      if (newQuotes.length > 0) {
+        quotes.push(...newQuotes);
+        saveQuotes();
+        alert('New quotes fetched from server!');
+        populateCategories();
+        displayQuotes();
+      }
+    } catch (error) {
+      console.error('Error fetching quotes:', error);
+    }
+  }
+  
+  // Periodically fetch quotes from the server
+  setInterval(fetchQuotesFromServer, 60000); // Fetch every 60 seconds
   
   // Event listener for the Show New Quote button
   document.getElementById('newQuote').addEventListener('click', showRandomQuote);
