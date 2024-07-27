@@ -11,7 +11,7 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
     const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
     const quote = filteredQuotes[randomIndex];
     const quoteDisplay = document.getElementById('quoteDisplay');
-    quoteDisplay.innerHTML = `<p>${quote.text}</p><p><em>${quote.category}</em></p>`;
+    quoteDisplay.textContent = `${quote.text} - ${quote.category}`;
     sessionStorage.setItem('lastQuote', JSON.stringify(quote));
   }
   
@@ -99,7 +99,7 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
     quoteDisplay.innerHTML = '';
     filteredQuotes.forEach(quote => {
       const quoteElement = document.createElement('div');
-      quoteElement.innerHTML = `<p>${quote.text}</p><p><em>${quote.category}</em></p>`;
+      quoteElement.textContent = `${quote.text} - ${quote.category}`;
       quoteDisplay.appendChild(quoteElement);
     });
   }
@@ -120,7 +120,7 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
     const lastQuote = JSON.parse(sessionStorage.getItem('lastQuote'));
     if (lastQuote) {
       const quoteDisplay = document.getElementById('quoteDisplay');
-      quoteDisplay.innerHTML = `<p>${lastQuote.text}</p><p><em>${lastQuote.category}</em></p>`;
+      quoteDisplay.textContent = `${lastQuote.text} - ${lastQuote.category}`;
     }
   }
   
