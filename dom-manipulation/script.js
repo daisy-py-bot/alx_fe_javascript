@@ -162,6 +162,7 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
         populateCategories();
         displayQuotes();
       }
+      alert('Quotes synced with server!');
     } catch (error) {
       console.error('Error fetching quotes:', error);
     }
