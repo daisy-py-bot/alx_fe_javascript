@@ -37,13 +37,16 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
   
   // Function to create the form for adding new quotes
   function createAddQuoteForm() {
-    const formContainer = document.createElement('div');
-    formContainer.innerHTML = `
-      <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-      <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-      <button onclick="addQuote()">Add Quote</button>
+    const formContainer = document.getElementById('formContainer');
+    const form = document.createElement('div');
+    form.innerHTML = `
+      <div>
+        <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+        <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+        <button onclick="addQuote()">Add Quote</button>
+      </div>
     `;
-    document.body.appendChild(formContainer);
+    formContainer.appendChild(form);
   }
   
   // Function to export quotes as JSON
@@ -70,22 +73,6 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
     fileReader.readAsText(event.target.files[0]);
   }
   
-  // Function to create the import/export buttons
-  function createImportExportButtons() {
-    const exportButton = document.createElement('button');
-    exportButton.textContent = 'Export Quotes';
-    exportButton.onclick = exportQuotes;
-    
-    const importInput = document.createElement('input');
-    importInput.type = 'file';
-    importInput.id = 'importFile';
-    importInput.accept = '.json';
-    importInput.onchange = importFromJsonFile;
-    
-    document.body.appendChild(exportButton);
-    document.body.appendChild(importInput);
-  }
-  
   // Load last viewed quote from session storage
   function loadLastViewedQuote() {
     const lastQuote = JSON.parse(sessionStorage.getItem('lastQuote'));
@@ -97,9 +84,9 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
   
   // Event listener for the Show New Quote button
   document.getElementById('newQuote').addEventListener('click', showRandomQuote);
+  document.getElementById('exportQuotes').addEventListener('click', exportQuotes);
   
-  // Call the functions to create the form and import/export buttons on page load
+  // Call the function to create the form on page load
   createAddQuoteForm();
-  createImportExportButtons();
   loadLastViewedQuote();
   
